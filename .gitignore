@@ -1,3 +1,9 @@
+# Personal
+build
+bin
+.vscode
+.cache
+
 # Prerequisites
 *.d
 
