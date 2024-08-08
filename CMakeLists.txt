@@ -51,6 +51,7 @@ enable_testing ()
 set (
   CMAKE_RUNTIME_OUTPUT_DIRECTORY
     ${CMAKE_CURRENT_LIST_DIR}/build/bin
+)
 
 # Add the 'src' subdirectory for further project structure.
 add_subdirectory (src)
