@@ -2,228 +2,160 @@
  * @copyright Copyright (c) 2023
  * 
  * @author Hugo Fernandez Solis (hugofernandezsolis@gmail.com)
- * @date 08-08-2024
+ * @date 12-08-2024
  * 
- * @file InternetAddress.h
+ * @file InternetAddress_Test.cpp
  * 
  * @brief
  */
 
+#include <InternetAddress_Test.h>
 
-#ifndef NC_INTERNET_ADDRESS_H
-#define NC_INTERNET_ADDRESS_H
-
-
-#include <string>
-
-#include <NetworkAddress.h>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
 
 
 namespace ncs { // Network Communications System
 namespace addr { // Network Communications System Addresses
-
-/**
- * InternetAddress types
- */
-using ip_t    = std::string;    // IP Address
-using port_t  = int;            // Connection port
-
-/**
- * InternetAddress constants
- */
-constexpr char LOCAL_HOST[] = "localhost";      // Use for local communication in the machine
-
-constexpr port_t RANDOM_PORT =  0;     // Use to allow the machine to select the port
-
-constexpr port_t MIN_VALID_PORT =  1023;     // Use to set the minimum valid port value
-constexpr port_t MAX_VALID_PORT = 65535;     // Use to set the maximum valid port value
+namespace tests { // Tests
 
 
-/**
- * @brief
- */
-class InternetAddress : NetworkAddress {
-public:
+/** PUBLIC METHODS */
+
 /// PUBLIC //////////////////////////////////////     CONSTRUCTORS    //////////////////////////////////////////////////
-  /**
-   * @brief
-   */
-  InternetAddress(void);
-
-  /**
-   * @brief
-   * 
-   * @param iPort 
-   * @param iIp_
-   */
-  InternetAddress(const ip_t& iIp, const port_t& iPort);
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr 
-   */
-  InternetAddress(const InternetAddress& iInternetAddr);
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr 
-   */
-  InternetAddress(InternetAddress&& iInternetAddr) noexcept;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////    CLASS METHODS    //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] bool is_valid(void) const;
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] bool has_valid_ip(void) const;
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] bool has_valid_port(void) const;
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] addr_family_e address_family(void) const;
-
-  /**
-   * @brief
-   */
-   void clear(void);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////  SETTERS & GETTERS  //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @param iIp 
-   */
-  void set_ip(const ip_t& iIp);
-
-  /**
-   * @brief
-   * 
-   * @param iPort 
-   */
-  void set_port(const port_t& iPort);
-  
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] const ip_t& get_ip(void);
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] const port_t& get_port(void);
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]]  ip_t get_ip(void) const;
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]]  port_t get_port(void) const;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////  OUTPUT FORMATTERS  //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] std::string to_string(void) const;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////       OPERATORS     //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  InternetAddress& operator=(const InternetAddress& iInternetAddr);
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  InternetAddress& operator=(InternetAddress&& iInternetAddr) noexcept;
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  [[nodiscard]] bool operator==(const InternetAddress& iInternetAddr) const;
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  [[nodiscard]] bool operator!=(const InternetAddress& iInternetAddr) const;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC ///////////////////////////////////////  FRIEND FUNCTIONS  //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @param os 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  friend std::ostream& operator<<(std::ostream& os, const InternetAddress& iInternetAddr);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////     DESTRUCTORS     //////////////////////////////////////////////////
-  /**
-   * @brief
-   */
-  ~InternetAddress();
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
 
-protected:
+/** PROTECTED METHODS **/
+
 /// PROTECTED ///////////////////////////////////     CONSTRUCTORS    //////////////////////////////////////////////////
+/**
+ * @brief 
+ */
+void InternetAddress_Test::SetUp() {
+  defaultFamily_ = get_random_number(0, 1) ? IPV4_FAMILY : IPV6_FAMILY;
+  defaultIp_ = defaultFamily_ == IPV4_FAMILY ? generate_ipv4(true) : generate_ipv6(true);
+  defaultPort_ = get_random_number(MIN_VALID_PORT, MAX_VALID_PORT);
+  defaultAddr_ = {defaultIp_, defaultPort_};
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PROTECTED ///////////////////////////////////    CLASS METHODS    //////////////////////////////////////////////////
+/**
+ * @brief 
+ * 
+ * @param iValid 
+ * 
+ * @return
+ */
+std::string InternetAddress_Test::generate_ipv4(const bool& iValid) {
+  std::ostringstream ip_stream;
+  std::array<int, 4> ipv4_arr;
+  for (int& digit : ipv4_arr) {
+    digit = get_random_number(0, 255);
+  }
+  if (iValid) {
+    ip_stream << ipv4_arr[0] << '.' << ipv4_arr[1] << '.' << ipv4_arr[2] << '.' << ipv4_arr[3];
+  }
+  else {
+    if (get_random_number(0, 1)) {  // Modify one digit's value
+      if (get_random_number(0, 1)) {  // Make one digit bigger than allowed
+        ipv4_arr.at(get_random_number(0, ipv4_arr.size() - 1)) = get_random_number(256, 999);
+        ip_stream << ipv4_arr[0] << '.' << ipv4_arr[1] << '.' << ipv4_arr[2] << '.' << ipv4_arr[3];
+      }
+      else {  // Make one digit smaller than allowed
+        ipv4_arr.at(get_random_number(0, ipv4_arr.size() - 1)) = get_random_number(-99, -1);
+        ip_stream << ipv4_arr[0] << '.' << ipv4_arr[1] << '.' << ipv4_arr[2] << '.' << ipv4_arr[3];
+      }
+    }
+    else {  // Modify number of digits
+      if (get_random_number(0, 1)) {  // Add one extra digit
+        ip_stream << ipv4_arr[0] << '.' << ipv4_arr[1] << '.' << ipv4_arr[2] << '.' << ipv4_arr[3]
+                  << '.' << get_random_number(0, 255);
+      }
+      else {  // Remove one digit
+        ip_stream << ipv4_arr[0] << '.' << ipv4_arr[1] << '.' << ipv4_arr[2];
+      }
+    }
+  }
+  return ip_stream.str();
+}
+
+/**
+ * @brief 
+ * 
+ * @param iValid 
+ * 
+ * @return
+ */
+std::string InternetAddress_Test::generate_ipv6(const bool& iValid) {
+  std::ostringstream ip_stream;
+  std::array<int, 8> ipv6_arr;
+  for (int& element : ipv6_arr) {
+    element = get_random_number(0, 65535);
+  }
+  if (iValid) {
+    ip_stream << to_hex(ipv6_arr[0]) << ':' << to_hex(ipv6_arr[1]) << ':' << to_hex(ipv6_arr[2]) << ':' << to_hex(ipv6_arr[3]) << ':'
+              << to_hex(ipv6_arr[4]) << ':' << to_hex(ipv6_arr[5]) << ':' << to_hex(ipv6_arr[6]) << ':' << to_hex(ipv6_arr[7]);
+  }
+  else {
+    if (get_random_number(0, 1)) {  // Modify one digit's value
+      if (get_random_number(0, 1)) {  // Make one digit bigger than allowed
+        ipv6_arr.at(get_random_number(0, ipv6_arr.size() - 1)) = get_random_number(0x10000, 0xFFFFF);
+        ip_stream << to_hex(ipv6_arr[0]) << ':' << to_hex(ipv6_arr[1]) << ':' << to_hex(ipv6_arr[2]) << ':' << to_hex(ipv6_arr[3]) << ':'
+                  << to_hex(ipv6_arr[4]) << ':' << to_hex(ipv6_arr[5]) << ':' << to_hex(ipv6_arr[6]) << ':' << to_hex(ipv6_arr[7]);
+      }
+      else {  // Make one digit smaller than allowed
+        ipv6_arr.at(get_random_number(0, ipv6_arr.size() - 1)) = get_random_number(-99, -1);
+        ip_stream << to_hex(ipv6_arr[0]) << ':' << to_hex(ipv6_arr[1]) << ':' << to_hex(ipv6_arr[2]) << ':' << to_hex(ipv6_arr[3]) << ':'
+                  << to_hex(ipv6_arr[4]) << ':' << to_hex(ipv6_arr[5]) << ':' << to_hex(ipv6_arr[6]) << ':' << to_hex(ipv6_arr[7]);
+      }
+    }
+    else {  // Modify number of digits
+      if (get_random_number(0, 1)) {  // Add one extra digit
+        ip_stream << to_hex(ipv6_arr[0]) << ':' << to_hex(ipv6_arr[1]) << ':' << to_hex(ipv6_arr[2]) << ':' << to_hex(ipv6_arr[3]) << ':'
+                  << to_hex(ipv6_arr[4]) << ':' << to_hex(ipv6_arr[5]) << ':' << to_hex(ipv6_arr[6]) << ':' << to_hex(ipv6_arr[7])
+                  << ':' << get_random_number(0x0000, 0xFFFF);
+      }
+      else {  // Remove one digit
+        ip_stream << to_hex(ipv6_arr[0]) << ':' << to_hex(ipv6_arr[1]) << ':' << to_hex(ipv6_arr[2]) << ':' << to_hex(ipv6_arr[3]) << ':'
+                  << to_hex(ipv6_arr[4]) << ':' << to_hex(ipv6_arr[5]) << ':' << to_hex(ipv6_arr[6]);
+      }
+    }
+  }
+  return ip_stream.str();
+}
+
+/**
+ * @brief
+ * 
+ * @param min 
+ * @param max 
+ * 
+ * @return
+ */
+int InternetAddress_Test::get_random_number(const int& min, const int& max) {
+  return min + rand() % (max - min + 1);
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PROTECTED ///////////////////////////////////  SETTERS & GETTERS  //////////////////////////////////////////////////
@@ -239,25 +171,24 @@ protected:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
 
-private:
+/** PRIVATE METHODS **/
+
 /// PRIVATE /////////////////////////////////////     CONSTRUCTORS    //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PRIVATE /////////////////////////////////////    CLASS METHODS    //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] bool has_valid_v4_ip(void) const;
-
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] bool has_valid_v6_ip(void) const;
+/**
+ * @brief 
+ * 
+ * @param val 
+ * 
+ * @return 
+ */
+std::string InternetAddress_Test::to_hex(const int& val) {
+  std::stringstream ss;
+  ss << std::hex << std::uppercase << val;
+  return ss.str();
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PRIVATE /////////////////////////////////////  SETTERS & GETTERS  //////////////////////////////////////////////////
@@ -271,16 +202,8 @@ private:
 
 /// PRIVATE /////////////////////////////////////     DESTRUCTORS     //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
-
-private:
-  ip_t ip_;
-  port_t port_;
-};
 
 
+} // namespace tests
 } // namespace addr
 } // namespace ncs
-
-
-#endif // NC_INTERNET_ADDRESS_H
