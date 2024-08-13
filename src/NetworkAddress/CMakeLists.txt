@@ -28,6 +28,7 @@ target_include_directories (
   ${COMPONENT_LIB}
     PUBLIC
       ${CMAKE_CURRENT_LIST_DIR}/include
+      ${CMAKE_CURRENT_LIST_DIR}/tests/include
 )
 
 # Gather source files for the component library.

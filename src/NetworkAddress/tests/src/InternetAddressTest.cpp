@@ -4,12 +4,12 @@
  * @author Hugo Fernandez Solis (hugofernandezsolis@gmail.com)
  * @date 12-08-2024
  * 
- * @file InternetAddress_Test.cpp
+ * @file InternetAddressTest.cpp
  * 
  * @brief
  */
 
-#include <InternetAddress_Test.h>
+#include <InternetAddressTest.h>
 
 #include <cstdlib>
 #include <ctime>
@@ -51,7 +51,7 @@ namespace tests { // Tests
 /**
  * @brief 
  */
-void InternetAddress_Test::SetUp() {
+void InternetAddressTest::SetUp() {
   defaultFamily_ = get_random_number(0, 1) ? IPV4_FAMILY : IPV6_FAMILY;
   defaultIp_ = defaultFamily_ == IPV4_FAMILY ? generate_ipv4(true) : generate_ipv6(true);
   defaultPort_ = get_random_number(MIN_VALID_PORT, MAX_VALID_PORT);
@@ -67,7 +67,7 @@ void InternetAddress_Test::SetUp() {
  * 
  * @return
  */
-std::string InternetAddress_Test::generate_ipv4(const bool& iValid) {
+std::string InternetAddressTest::generate_ipv4(const bool& iValid) {
   std::ostringstream ip_stream;
   std::array<int, 4> ipv4_arr;
   for (int& digit : ipv4_arr) {
@@ -107,7 +107,7 @@ std::string InternetAddress_Test::generate_ipv4(const bool& iValid) {
  * 
  * @return
  */
-std::string InternetAddress_Test::generate_ipv6(const bool& iValid) {
+std::string InternetAddressTest::generate_ipv6(const bool& iValid) {
   std::ostringstream ip_stream;
   std::array<int, 8> ipv6_arr;
   for (int& element : ipv6_arr) {
@@ -153,7 +153,7 @@ std::string InternetAddress_Test::generate_ipv6(const bool& iValid) {
  * 
  * @return
  */
-int InternetAddress_Test::get_random_number(const int& min, const int& max) {
+int InternetAddressTest::get_random_number(const int& min, const int& max) {
   return min + rand() % (max - min + 1);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@ int InternetAddress_Test::get_random_number(const int& min, const int& max) {
  * 
  * @return 
  */
-std::string InternetAddress_Test::to_hex(const int& val) {
+std::string InternetAddressTest::to_hex(const int& val) {
   std::stringstream ss;
   ss << std::hex << std::uppercase << val;
   return ss.str();

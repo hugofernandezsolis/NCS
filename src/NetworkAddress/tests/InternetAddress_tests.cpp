@@ -10,7 +10,7 @@
  */
 
 
-#include <InternetAddress_Test.h>
+#include <InternetAddressTest.h>
 
 #include <gtest/gtest.h>
 
@@ -22,10 +22,11 @@
 namespace ncs::addr {
 namespace tests {
 
+
 /**
  * @brief
  */
-TEST_F(InternetAddress_Test, Default_Constructor) {
+TEST_F(InternetAddressTest, Default_Constructor) {
   InternetAddress addr;
   EXPECT_FALSE(addr.is_valid());
   EXPECT_FALSE(addr.has_valid_ip());
@@ -36,13 +37,13 @@ TEST_F(InternetAddress_Test, Default_Constructor) {
 /**
  * @brief
  */
-TEST_F(InternetAddress_Test, Ip_And_Port_Constructor) {
+TEST_F(InternetAddressTest, Ip_And_Port_Constructor) {
 }
 
 /**
  * @brief
  */
-TEST_F(InternetAddress_Test, Copy_Constructor) {
+TEST_F(InternetAddressTest, Copy_Constructor) {
   InternetAddress addr = defaultAddr_;
   EXPECT_EQ(addr, defaultAddr_);
 }
@@ -50,7 +51,7 @@ TEST_F(InternetAddress_Test, Copy_Constructor) {
 /**
  * @brief
  */
-TEST_F(InternetAddress_Test, Move_Constructor) {
+TEST_F(InternetAddressTest, Move_Constructor) {
   InternetAddress copy = defaultAddr_;
   InternetAddress addr(std::move(copy));
   EXPECT_NE(addr, copy);
@@ -60,7 +61,7 @@ TEST_F(InternetAddress_Test, Move_Constructor) {
 /**
  * @brief
  */
-TEST_F(InternetAddress_Test, Check_Validity) {
+TEST_F(InternetAddressTest, Check_Validity) {
   std::map<std::string, InternetAddress> ipv4;
   std::map<std::string, InternetAddress> ipv6;
 
@@ -130,14 +131,14 @@ TEST_F(InternetAddress_Test, Check_Validity) {
 /**
  * @brief
  */
-TEST_F(InternetAddress_Test, Address_Family) {
+TEST_F(InternetAddressTest, Address_Family) {
   EXPECT_EQ(defaultAddr_.address_family(), defaultFamily_);
 }
 
 /**
  * @brief
  */
-TEST_F(InternetAddress_Test, Clear) {
+TEST_F(InternetAddressTest, Clear) {
   defaultAddr_.clear();
   EXPECT_FALSE(defaultAddr_.is_valid());
   EXPECT_FALSE(defaultAddr_.has_valid_ip());
@@ -148,7 +149,7 @@ TEST_F(InternetAddress_Test, Clear) {
 /**
  * @brief
  */
-TEST_F(InternetAddress_Test, Setters_And_Getters) {
+TEST_F(InternetAddressTest, Setters_And_Getters) {
   EXPECT_EQ(defaultAddr_.get_ip(), defaultIp_);
   EXPECT_EQ(defaultAddr_.get_port(), defaultPort_);
 
@@ -167,7 +168,7 @@ TEST_F(InternetAddress_Test, Setters_And_Getters) {
 /**
  * @brief
  */
-TEST_F(InternetAddress_Test, Assignment_Operators) {
+TEST_F(InternetAddressTest, Assignment_Operators) {
   InternetAddress aux;
   aux = defaultAddr_;
   EXPECT_EQ(aux, defaultAddr_);
@@ -176,6 +177,17 @@ TEST_F(InternetAddress_Test, Assignment_Operators) {
   aux = std::move(defaultAddr_);
   EXPECT_NE(aux, defaultAddr_);
   EXPECT_EQ(aux, aux2);
+}
+
+/**
+ * @brief
+ */
+TEST_F(InternetAddressTest, Comparison_Operators) {
+  InternetAddress auxiliaryIpAddr1(defaultAddr_.get_ip(), defaultAddr_.get_port());
+  EXPECT_EQ(auxiliaryIpAddr1, defaultAddr_);
+
+  auxiliaryIpAddr1.set_port((auxiliaryIpAddr1.get_port() + 1) % MAX_VALID_PORT);
+  EXPECT_NE(auxiliaryIpAddr1, defaultAddr_);
 }
 
 

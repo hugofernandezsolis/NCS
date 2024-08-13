@@ -4,7 +4,7 @@
  * @author Hugo Fernandez Solis (hugofernandezsolis@gmail.com)
  * @date 08-08-2024
  * 
- * @file InternetAddress_Test.h
+ * @file InternetAddressTest.h
  * 
  * @brief
  */
@@ -30,7 +30,7 @@ namespace tests { // Tests
 /**
  * @brief
  */
-class InternetAddress_Test : public ::testing::Test {
+class InternetAddressTest : public ::testing::Test {
 public:
 /// PUBLIC //////////////////////////////////////     CONSTRUCTORS    //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
