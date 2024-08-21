@@ -78,10 +78,10 @@ InternetAddress::InternetAddress(InternetAddress&& iInternetAddr) noexcept {
  */
 [[nodiscard]] bool InternetAddress::has_valid_ip(void) const {
   switch (this->address_family()) {
-    case IPV4_FAMILY:
+    case AF_INET:
       return this->has_valid_v4_ip();
     break;
-    case IPV6_FAMILY:
+    case AF_INET6:
       return this->has_valid_v6_ip();
     break;
     default:
@@ -97,21 +97,6 @@ InternetAddress::InternetAddress(InternetAddress&& iInternetAddr) noexcept {
  */
 [[nodiscard]] bool InternetAddress::has_valid_port(void) const {
   return (this->get_port() >= MIN_VALID_PORT) && (this->get_port() <= MAX_VALID_PORT);
-}
-
-/**
- * @brief
- * 
- * @return
- */
-[[nodiscard]] addr_family_e InternetAddress::address_family(void) const {
-  if (this->has_valid_v4_ip()) {
-    return IPV4_FAMILY;
-  }
-  if (this->has_valid_v6_ip()) {
-    return IPV6_FAMILY;
-  }
-  return ERROR_FAMILY;
 }
 
 /**
@@ -178,6 +163,21 @@ void InternetAddress::set_port(const port_t& iPort) {
 [[nodiscard]] port_t InternetAddress::get_port(void) const {
   return this->port_;
 }
+
+/**
+ * @brief
+ * 
+ * @return
+ */
+[[nodiscard]] addr_family_e InternetAddress::get_address_family(void) const {
+  if (this->has_valid_v4_ip()) {
+    return AF_INET;
+  }
+  if (this->has_valid_v6_ip()) {
+    return AF_INET6;
+  }
+  return AF_UNKNOWN;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////  OUTPUT FORMATTERS  //////////////////////////////////////////////////
@@ -189,10 +189,10 @@ void InternetAddress::set_port(const port_t& iPort) {
 [[nodiscard]] std::string InternetAddress::to_string(void) const {
   std::string result;
   switch (this->address_family()) {
-    case IPV4_FAMILY:
+    case AF_INET:
       result = this->get_ip() + ':';
     break;
-    case IPV6_FAMILY:
+    case AF_INET6:
       result = '[' + this->get_ip() + "]:";
     break;
     default:

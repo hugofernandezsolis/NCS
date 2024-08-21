@@ -4,218 +4,59 @@
  * @author Hugo Fernandez Solis (hugofernandezsolis@gmail.com)
  * @date 08-08-2024
  * 
- * @file InternetAddress.h
+ * @file InternetSocket.h
  * 
- * @brief
+ * @brief 
  */
 
 
-#ifndef NC_INTERNET_ADDRESS_H
-#define NC_INTERNET_ADDRESS_H
+#ifndef NCS_INTERNET_SOCKET_H
+#define NCS_INTERNET_SOCKET_H
 
 
-#include <string>
-
-#include <NetworkAddress.h>
-
+#include <sys/socket.h>
 
 namespace ncs { // Network Communications System
-namespace addr { // Network Communications System Addresses
-
-/**
- * InternetAddress types
- */
-using ip_t    = std::string;    // IP Address
-using port_t  = int;            // Connection port
-
-/**
- * InternetAddress constants
- */
-constexpr char LOCAL_HOST[] = "localhost";      // Use for local communication in the machine
-
-constexpr port_t RANDOM_PORT =  0;     // Use to allow the machine to select the port
-
-constexpr port_t MIN_VALID_PORT =  1023;     // Use to set the minimum valid port value
-constexpr port_t MAX_VALID_PORT = 65535;     // Use to set the maximum valid port value
+namespace sock { // Network Communications System Sockets
 
 
 /**
- * @brief
+ * InternetSocket types
  */
-class InternetAddress : NetworkAddress {
-public:
+
+
+/**
+ * @brief 
+ */
+class InternetSocket {
+  public:
 /// PUBLIC //////////////////////////////////////     CONSTRUCTORS    //////////////////////////////////////////////////
   /**
    * @brief
    */
-  InternetAddress(void);
-
-  /**
-   * @brief
-   * 
-   * @param iPort 
-   * @param iIp_
-   */
-  InternetAddress(const ip_t& iIp, const port_t& iPort);
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr 
-   */
-  InternetAddress(const InternetAddress& iInternetAddr);
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr 
-   */
-  InternetAddress(InternetAddress&& iInternetAddr) noexcept;
+  InternetSocket(void);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////    CLASS METHODS    //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] bool is_valid(void) const;
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] bool has_valid_ip(void) const;
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] bool has_valid_port(void) const;
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] addr_family_e address_family(void) const;
-
-  /**
-   * @brief
-   */
-   void clear(void);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////  SETTERS & GETTERS  //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @param iIp 
-   */
-  void set_ip(const ip_t& iIp);
-
-  /**
-   * @brief
-   * 
-   * @param iPort 
-   */
-  void set_port(const port_t& iPort);
-  
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] const ip_t& get_ip(void);
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] const port_t& get_port(void);
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]]  ip_t get_ip(void) const;
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]]  port_t get_port(void) const;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////  OUTPUT FORMATTERS  //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] std::string to_string(void) const;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////       OPERATORS     //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  InternetAddress& operator=(const InternetAddress& iInternetAddr);
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  InternetAddress& operator=(InternetAddress&& iInternetAddr) noexcept;
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  [[nodiscard]] bool operator==(const InternetAddress& iInternetAddr) const;
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  [[nodiscard]] bool operator!=(const InternetAddress& iInternetAddr) const;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC ///////////////////////////////////////  FRIEND FUNCTIONS  //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @param os 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  friend std::ostream& operator<<(std::ostream& os, const InternetAddress& iInternetAddr);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////     DESTRUCTORS     //////////////////////////////////////////////////
   /**
    * @brief
    */
-  ~InternetAddress();
+  ~InternetSocket();
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
 
@@ -244,20 +85,6 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PRIVATE /////////////////////////////////////    CLASS METHODS    //////////////////////////////////////////////////
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] bool has_valid_v4_ip(void) const;
-
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]] bool has_valid_v6_ip(void) const;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PRIVATE /////////////////////////////////////  SETTERS & GETTERS  //////////////////////////////////////////////////
@@ -271,16 +98,11 @@ private:
 
 /// PRIVATE /////////////////////////////////////     DESTRUCTORS     //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
-
-private:
-  ip_t ip_;
-  port_t port_;
 };
 
 
-} // namespace addr
+} // namespace sock
 } // namespace ncs
 
 
-#endif // NC_INTERNET_ADDRESS_H
+#endif // NCS_INTERNET_SOCKET_H

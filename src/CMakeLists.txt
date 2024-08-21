@@ -30,7 +30,8 @@ find_package(
 # Get a list of subdirectories in the current directory
 set (
   COMPONENTS
-    NetworkAddress
+    NetworkAddresses
+    NetworkSockets
 )
 
 # Iterate over each subdirectory
