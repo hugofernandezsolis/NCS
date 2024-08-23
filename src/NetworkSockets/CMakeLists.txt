@@ -48,6 +48,7 @@ target_sources (
 # Link the needed libraries.
 target_link_libraries (
   ${COMPONENT_LIB}
+    NetworkAddresses
 )
 
 # Add component tests
