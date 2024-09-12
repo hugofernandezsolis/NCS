@@ -27,7 +27,11 @@ namespace addr { // Network Communications System Addresses
 /**
  * @brief Default constructor
  */
-InternetAddress::InternetAddress(void) {}
+InternetAddress::InternetAddress(void) {
+  this->set_ip(LOCAL_HOST);
+  this->set_port(-1);
+}
+
 /**
  * @brief Parameters constructor
  * 
@@ -42,22 +46,22 @@ InternetAddress::InternetAddress(const ip_t& iIp, const port_t& iPort) {
 /**
  * @brief Copy constructor
  * 
- * @param iInternetAddr 
+ * @param iOther 
  */
-InternetAddress::InternetAddress(const InternetAddress& iInternetAddr) {
-  this->set_ip(iInternetAddr.get_ip());
-  this->set_port(iInternetAddr.get_port());
+InternetAddress::InternetAddress(const InternetAddress& iOther) {
+  this->set_ip(iOther.get_ip());
+  this->set_port(iOther.get_port());
 }
 
 /**
  * @brief Move constructor
  * 
- * @param iInternetAddr 
+ * @param iOther 
  */
-InternetAddress::InternetAddress(InternetAddress&& iInternetAddr) noexcept {
-  this->set_ip(std::move(iInternetAddr.get_ip()));
-  this->set_port(iInternetAddr.get_port());
-  iInternetAddr.clear();
+InternetAddress::InternetAddress(InternetAddress&& iOther) noexcept {
+  this->set_ip(std::move(iOther.get_ip()));
+  this->set_port(iOther.get_port());
+  iOther.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -77,7 +81,7 @@ InternetAddress::InternetAddress(InternetAddress&& iInternetAddr) noexcept {
  * @return
  */
 [[nodiscard]] bool InternetAddress::has_valid_ip(void) const {
-  switch (this->address_family()) {
+  switch (this->get_address_family()) {
     case AF_INET:
       return this->has_valid_v4_ip();
     break;
@@ -133,7 +137,7 @@ void InternetAddress::set_port(const port_t& iPort) {
  * 
  * @return
  */
-[[nodiscard]] const ip_t& InternetAddress::get_ip(void) {
+[[nodiscard]] const ip_t& InternetAddress::get_ip(void) const {
   return this->ip_;
 }
 
@@ -142,25 +146,7 @@ void InternetAddress::set_port(const port_t& iPort) {
  * 
  * @return
  */
-[[nodiscard]] const port_t& InternetAddress::get_port(void) {
-  return this->port_;
-}
-
-/**
- * @brief
- * 
- * @return
- */
-[[nodiscard]] ip_t InternetAddress::get_ip(void) const {
-  return this->ip_;
-}
-
-/**
- * @brief
- * 
- * @return
- */
-[[nodiscard]] port_t InternetAddress::get_port(void) const {
+[[nodiscard]] const port_t& InternetAddress::get_port(void) const {
   return this->port_;
 }
 
@@ -171,12 +157,12 @@ void InternetAddress::set_port(const port_t& iPort) {
  */
 [[nodiscard]] addr_family_e InternetAddress::get_address_family(void) const {
   if (this->has_valid_v4_ip()) {
-    return AF_INET;
+    return NET_ADDR_FAM_INET;
   }
   if (this->has_valid_v6_ip()) {
-    return AF_INET6;
+    return NET_ADDR_FAM_INET6;
   }
-  return AF_UNKNOWN;
+  return NET_ADDR_FAM_UNKNOWN;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -188,7 +174,7 @@ void InternetAddress::set_port(const port_t& iPort) {
  */
 [[nodiscard]] std::string InternetAddress::to_string(void) const {
   std::string result;
-  switch (this->address_family()) {
+  switch (this->get_address_family()) {
     case AF_INET:
       result = this->get_ip() + ':';
     break;
@@ -209,14 +195,14 @@ void InternetAddress::set_port(const port_t& iPort) {
 /**
  * @brief Copy assignment operator
  * 
- * @param iInternetAddr
+ * @param iOther
  * 
  * @return
  */
-InternetAddress& InternetAddress::operator=(const InternetAddress& iInternetAddr) {
-  if (this != &iInternetAddr) {
-    this->set_ip(iInternetAddr.get_ip());
-    this->set_port(iInternetAddr.get_port());
+InternetAddress& InternetAddress::operator=(const InternetAddress& iOther) {
+  if (this != &iOther) {
+    this->set_ip(iOther.get_ip());
+    this->set_port(iOther.get_port());
   }
   return *this;
 }
@@ -224,15 +210,15 @@ InternetAddress& InternetAddress::operator=(const InternetAddress& iInternetAddr
 /**
  * @brief Move assignment operator
  * 
- * @param iInternetAddr
+ * @param iOther
  * 
  * @return
  */
-InternetAddress& InternetAddress::operator=(InternetAddress&& iInternetAddr) noexcept {
-  if (this != &iInternetAddr) {
-    this->set_ip(std::move(iInternetAddr.get_ip()));
-    this->set_port(iInternetAddr.get_port());
-    iInternetAddr.clear();
+InternetAddress& InternetAddress::operator=(InternetAddress&& iOther) noexcept {
+  if (this != &iOther) {
+    this->set_ip(std::move(iOther.get_ip()));
+    this->set_port(iOther.get_port());
+    iOther.clear();
   }
   return *this;
 }
@@ -240,25 +226,25 @@ InternetAddress& InternetAddress::operator=(InternetAddress&& iInternetAddr) noe
 /**
  * @brief
  * 
- * @param iInternetAddr
+ * @param iOther
  * 
  * @return
  */
-[[nodiscard]] bool InternetAddress::operator==(const InternetAddress& iInternetAddr) const {
-  if (this == &iInternetAddr) {return true;}
-  return (this->get_ip() == iInternetAddr.get_ip()) && (this->get_port() == iInternetAddr.get_port());
+[[nodiscard]] bool InternetAddress::operator==(const InternetAddress& iOther) const {
+  if (this == &iOther) {return true;}
+  return (this->get_ip() == iOther.get_ip()) && (this->get_port() == iOther.get_port());
 }
 
 /**
  * @brief
  * 
- * @param iInternetAddr
+ * @param iOther
  * 
  * @return
  */
-[[nodiscard]] bool InternetAddress::operator!=(const InternetAddress& iInternetAddr) const {
-  if (this == &iInternetAddr) {return false;}
-  return (this->get_ip() != iInternetAddr.get_ip()) || (this->get_port() != iInternetAddr.get_port());
+[[nodiscard]] bool InternetAddress::operator!=(const InternetAddress& iOther) const {
+  if (this == &iOther) {return false;}
+  return (this->get_ip() != iOther.get_ip()) || (this->get_port() != iOther.get_port());
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -266,14 +252,14 @@ InternetAddress& InternetAddress::operator=(InternetAddress&& iInternetAddr) noe
 /**
  * @brief
  * 
- * @param os 
- * @param iInternetAddr
+ * @param oStream
+ * @param iOther
  * 
  * @return
  */
-std::ostream& operator<<(std::ostream& os, const InternetAddress& iInternetAddr) {
-  os << iInternetAddr.to_string();
-  return os;
+std::ostream& operator<<(std::ostream& oStream, const InternetAddress& iOther) {
+  oStream << iOther.to_string();
+  return oStream;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

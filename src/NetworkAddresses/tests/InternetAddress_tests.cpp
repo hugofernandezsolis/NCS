@@ -31,7 +31,7 @@ TEST_F(InternetAddressTest, Default_Constructor) {
   EXPECT_FALSE(addr.is_valid());
   EXPECT_FALSE(addr.has_valid_ip());
   EXPECT_FALSE(addr.has_valid_port());
-  EXPECT_EQ   (addr.address_family(), ERROR_FAMILY);
+  EXPECT_EQ   (addr.get_address_family(), NET_ADDR_FAM_UNKNOWN);
 }
 
 /**
@@ -83,56 +83,56 @@ TEST_F(InternetAddressTest, Check_Validity) {
   EXPECT_TRUE(ipv4[VALID_ADDRESS].is_valid());
   EXPECT_TRUE(ipv4[VALID_ADDRESS].has_valid_ip());
   EXPECT_TRUE(ipv4[VALID_ADDRESS].has_valid_port());
-  EXPECT_EQ  (ipv4[VALID_ADDRESS].address_family(), IPV4_FAMILY);
+  EXPECT_EQ  (ipv4[VALID_ADDRESS].get_address_family(), NET_ADDR_FAM_INET);
   
   // Ipv4 Invalid Ip
   EXPECT_FALSE(ipv4[INVALID_IP].is_valid());
   EXPECT_FALSE(ipv4[INVALID_IP].has_valid_ip());
   EXPECT_TRUE (ipv4[INVALID_IP].has_valid_port());
-  EXPECT_EQ   (ipv4[INVALID_IP].address_family(), ERROR_FAMILY);
+  EXPECT_EQ   (ipv4[INVALID_IP].get_address_family(), NET_ADDR_FAM_UNKNOWN);
   
   // Ipv4 Invalid Port
   EXPECT_FALSE(ipv4[INVALID_PORT].is_valid());
   EXPECT_TRUE (ipv4[INVALID_PORT].has_valid_ip());
   EXPECT_FALSE(ipv4[INVALID_PORT].has_valid_port());
-  EXPECT_EQ   (ipv4[INVALID_PORT].address_family(), IPV4_FAMILY);
+  EXPECT_EQ   (ipv4[INVALID_PORT].get_address_family(), NET_ADDR_FAM_INET);
   
   // Ipv4 Invalid Address
   EXPECT_FALSE(ipv4[INVALID_ADDRESS].is_valid());
   EXPECT_FALSE(ipv4[INVALID_ADDRESS].has_valid_ip());
   EXPECT_FALSE(ipv4[INVALID_ADDRESS].has_valid_port());
-  EXPECT_EQ   (ipv4[INVALID_ADDRESS].address_family(), ERROR_FAMILY);
+  EXPECT_EQ   (ipv4[INVALID_ADDRESS].get_address_family(), NET_ADDR_FAM_UNKNOWN);
 
   // Ipv6 Valid Address
   EXPECT_TRUE(ipv6[VALID_ADDRESS].is_valid());
   EXPECT_TRUE(ipv6[VALID_ADDRESS].has_valid_ip());
   EXPECT_TRUE(ipv6[VALID_ADDRESS].has_valid_port());
-  EXPECT_EQ  (ipv6[VALID_ADDRESS].address_family(), IPV6_FAMILY);
+  EXPECT_EQ  (ipv6[VALID_ADDRESS].get_address_family(), NET_ADDR_FAM_INET6);
   
   // Ipv6 Invalid Ip
   EXPECT_FALSE(ipv6[INVALID_IP].is_valid());
   EXPECT_FALSE(ipv6[INVALID_IP].has_valid_ip());
   EXPECT_TRUE (ipv6[INVALID_IP].has_valid_port());
-  EXPECT_EQ   (ipv6[INVALID_IP].address_family(), ERROR_FAMILY);
+  EXPECT_EQ   (ipv6[INVALID_IP].get_address_family(), NET_ADDR_FAM_UNKNOWN);
   
   // Ipv6 Invalid Port
   EXPECT_FALSE(ipv6[INVALID_PORT].is_valid());
   EXPECT_TRUE (ipv6[INVALID_PORT].has_valid_ip());
   EXPECT_FALSE(ipv6[INVALID_PORT].has_valid_port());
-  EXPECT_EQ   (ipv6[INVALID_PORT].address_family(), IPV6_FAMILY);
+  EXPECT_EQ   (ipv6[INVALID_PORT].get_address_family(), NET_ADDR_FAM_INET6);
   
   // Ipv6 Invalid Address
   EXPECT_FALSE(ipv6[INVALID_ADDRESS].is_valid());
   EXPECT_FALSE(ipv6[INVALID_ADDRESS].has_valid_ip());
   EXPECT_FALSE(ipv6[INVALID_ADDRESS].has_valid_port());
-  EXPECT_EQ   (ipv6[INVALID_ADDRESS].address_family(), ERROR_FAMILY);
+  EXPECT_EQ   (ipv6[INVALID_ADDRESS].get_address_family(), NET_ADDR_FAM_UNKNOWN);
 }
 
 /**
  * @brief
  */
 TEST_F(InternetAddressTest, Address_Family) {
-  EXPECT_EQ(defaultAddr_.address_family(), defaultFamily_);
+  EXPECT_EQ(defaultAddr_.get_address_family(), defaultFamily_);
 }
 
 /**
@@ -143,7 +143,7 @@ TEST_F(InternetAddressTest, Clear) {
   EXPECT_FALSE(defaultAddr_.is_valid());
   EXPECT_FALSE(defaultAddr_.has_valid_ip());
   EXPECT_FALSE(defaultAddr_.has_valid_port());
-  EXPECT_EQ   (defaultAddr_.address_family(), ERROR_FAMILY);
+  EXPECT_EQ   (defaultAddr_.get_address_family(), NET_ADDR_FAM_UNKNOWN);
 }
 
 /**
@@ -153,13 +153,13 @@ TEST_F(InternetAddressTest, Setters_And_Getters) {
   EXPECT_EQ(defaultAddr_.get_ip(), defaultIp_);
   EXPECT_EQ(defaultAddr_.get_port(), defaultPort_);
 
-  addr_family_e newFamily = get_random_number(0, 1) ? IPV4_FAMILY : IPV6_FAMILY;
-  ip_t newIp = newFamily == IPV4_FAMILY ? generate_ipv4(true) : generate_ipv6(true);
+  addr_family_e newFamily = get_random_number(0, 1) ? NET_ADDR_FAM_INET : NET_ADDR_FAM_INET6;
+  ip_t newIp = newFamily == NET_ADDR_FAM_INET ? generate_ipv4(true) : generate_ipv6(true);
   port_t newPort = get_random_number(MIN_VALID_PORT, MAX_VALID_PORT);
 
   defaultAddr_.set_ip(newIp);
   EXPECT_EQ(defaultAddr_.get_ip(), newIp);
-  EXPECT_EQ(defaultAddr_.address_family(), newFamily);
+  EXPECT_EQ(defaultAddr_.get_address_family(), newFamily);
 
   defaultAddr_.set_port(newPort);
   EXPECT_EQ(defaultAddr_.get_port(), newPort);
@@ -188,12 +188,6 @@ TEST_F(InternetAddressTest, Comparison_Operators) {
 
   auxiliaryIpAddr1.set_port((auxiliaryIpAddr1.get_port() + 1) % MAX_VALID_PORT);
   EXPECT_NE(auxiliaryIpAddr1, defaultAddr_);
-}
-
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }
 
 

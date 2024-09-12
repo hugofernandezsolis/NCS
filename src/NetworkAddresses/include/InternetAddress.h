@@ -46,7 +46,7 @@ class InternetAddress : NetworkAddress {
 public:
 /// PUBLIC //////////////////////////////////////     CONSTRUCTORS    //////////////////////////////////////////////////
   /**
-   * @brief
+   * @brief Default constructor
    */
   InternetAddress(void);
 
@@ -59,18 +59,18 @@ public:
   InternetAddress(const ip_t& iIp, const port_t& iPort);
 
   /**
-   * @brief
+   * @brief Copy constructor
    * 
-   * @param iInternetAddr 
+   * @param iOther 
    */
-  InternetAddress(const InternetAddress& iInternetAddr);
+  InternetAddress(const InternetAddress& iOther);
 
   /**
-   * @brief
+   * @brief Move constructor
    * 
-   * @param iInternetAddr 
+   * @param iOther 
    */
-  InternetAddress(InternetAddress&& iInternetAddr) noexcept;
+  InternetAddress(InternetAddress&& iOther) noexcept;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////    CLASS METHODS    //////////////////////////////////////////////////
@@ -121,28 +121,14 @@ public:
    * 
    * @return
    */
-  [[nodiscard]] const ip_t& get_ip(void);
+  [[nodiscard]] const ip_t& get_ip(void) const;
 
   /**
    * @brief
    * 
    * @return
    */
-  [[nodiscard]] const port_t& get_port(void);
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]]  ip_t get_ip(void) const;
-
-  /**
-   * @brief
-   * 
-   * @return
-   */
-  [[nodiscard]]  port_t get_port(void) const;
+  [[nodiscard]] const port_t& get_port(void) const;
 
   /**
    * @brief
@@ -163,57 +149,57 @@ public:
 
 /// PUBLIC //////////////////////////////////////       OPERATORS     //////////////////////////////////////////////////
   /**
-   * @brief
+   * @brief Copy assignment operator
    * 
-   * @param iInternetAddr
+   * @param iOther
    * 
    * @return
    */
-  InternetAddress& operator=(const InternetAddress& iInternetAddr);
+  InternetAddress& operator=(const InternetAddress& iOther);
+
+  /**
+   * @brief Move assignment operator
+   * 
+   * @param iOther
+   * 
+   * @return
+   */
+  InternetAddress& operator=(InternetAddress&& iOther) noexcept;
 
   /**
    * @brief
    * 
-   * @param iInternetAddr
+   * @param iOther
    * 
    * @return
    */
-  InternetAddress& operator=(InternetAddress&& iInternetAddr) noexcept;
+  [[nodiscard]] bool operator==(const InternetAddress& iOther) const;
 
   /**
    * @brief
    * 
-   * @param iInternetAddr
+   * @param iOther
    * 
    * @return
    */
-  [[nodiscard]] bool operator==(const InternetAddress& iInternetAddr) const;
-
-  /**
-   * @brief
-   * 
-   * @param iInternetAddr
-   * 
-   * @return
-   */
-  [[nodiscard]] bool operator!=(const InternetAddress& iInternetAddr) const;
+  [[nodiscard]] bool operator!=(const InternetAddress& iOther) const;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC ///////////////////////////////////////  FRIEND FUNCTIONS  //////////////////////////////////////////////////
   /**
    * @brief
    * 
-   * @param os 
+   * @param oStream 
    * @param iInternetAddr
    * 
    * @return
    */
-  friend std::ostream& operator<<(std::ostream& os, const InternetAddress& iInternetAddr);
+  friend std::ostream& operator<<(std::ostream& oStream, const InternetAddress& iInternetAddr);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////     DESTRUCTORS     //////////////////////////////////////////////////
   /**
-   * @brief
+   * @brief Destructor
    */
   ~InternetAddress();
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

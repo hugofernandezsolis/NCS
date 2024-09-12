@@ -18,23 +18,97 @@ namespace sock { // Network Communications System Sockets
 
 
 /** PUBLIC METHODS **/
-/// PUBLIC //////////////////////////////////////     CONSTRUCTORS    //////////////////////////////////////////////////
+/// PUBLIC //////////////////////////////////////     CONSTRUCTORS    //////////////////////////////////////////////////    
 /**
- * @brief
+ * @brief Default constructor
  */
-InternetSocket::InternetSocket(void) {}
+InternetSocket::InternetSocket(void) {
+	this->set_sd(-1);
+	this->set_addr({addr::LOCAL_HOST, addr::RANDOM_PORT});
+}
+
+/**
+ * @brief Copy constructor
+ */
+InternetSocket::InternetSocket(const InternetSocket& other) : sd_(other.sd_), addr_(other.addr_) {
+
+}
+
+/**
+ * @brief Move constructor
+ */
+InternetSocket::InternetSocket(InternetSocket&& other) noexcept : sd_(other.sd_), addr_(std::move(other.addr_)) {
+	other.sd_ = -1;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////    CLASS METHODS    //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////  SETTERS & GETTERS  //////////////////////////////////////////////////
+/**
+ * @brief
+ * 
+ * @param iSd 
+ */
+void InternetSocket::set_sd(const sd_t& iSd) {
+	this->sd_ = iSd;
+}
+
+/**
+ * @brief
+ * 
+ * @param iAddr 
+ */
+void InternetSocket::set_addr(const addr::InternetAddress& iAddr) {
+	this->addr_ = iAddr;
+}
+
+/**
+ * @brief
+ * 
+ * @return
+ */
+[[nodiscard]] const sd_t& InternetSocket::get_sd(void) const {
+	return this->sd_;
+}
+
+/**
+ * @brief
+ * 
+ * @return
+ */
+[[nodiscard]] const addr::InternetAddress& InternetSocket::get_addr(void) const {
+	return this->addr_;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////  OUTPUT FORMATTERS  //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC //////////////////////////////////////       OPERATORS     //////////////////////////////////////////////////
+/**
+ * @brief Copy assignment operator
+ */
+InternetSocket& InternetSocket::operator=(const InternetSocket& other) {
+ if (this != &other) {
+		sd_ = other.sd_;
+		addr_ = other.addr_;
+	}
+	return *this;
+}
+
+/**
+ * @brief Move assignment operator
+ */
+InternetSocket& InternetSocket::operator=(InternetSocket&& other) noexcept {
+	if (this != &other) {
+		sd_ = other.sd_;
+		addr_ = std::move(other.addr_);
+		other.sd_ = -1;
+	}
+	return *this;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// PUBLIC ///////////////////////////////////////  FRIEND FUNCTIONS  //////////////////////////////////////////////////

@@ -52,8 +52,8 @@ namespace tests { // Tests
  * @brief 
  */
 void InternetAddressTest::SetUp() {
-  defaultFamily_ = get_random_number(0, 1) ? IPV4_FAMILY : IPV6_FAMILY;
-  defaultIp_ = defaultFamily_ == IPV4_FAMILY ? generate_ipv4(true) : generate_ipv6(true);
+  defaultFamily_ = get_random_number(0, 1) ? NET_ADDR_FAM_INET : NET_ADDR_FAM_INET6;
+  defaultIp_ = defaultFamily_ == NET_ADDR_FAM_INET ? generate_ipv4(true) : generate_ipv6(true);
   defaultPort_ = get_random_number(MIN_VALID_PORT, MAX_VALID_PORT);
   defaultAddr_ = {defaultIp_, defaultPort_};
 }

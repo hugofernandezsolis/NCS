@@ -30,13 +30,13 @@ endif()
 
 # Get a list of subdirectories in the current directory
 set (
-  COMPONENTS
+  COMPONENTS_SET
     NetworkAddresses
     NetworkSockets
 )
 
 # Iterate over each subdirectory
-foreach (COMPONENT ${COMPONENTS})
+foreach (COMPONENT ${COMPONENTS_SET})
   # Set the name of the component library.
   set (COMPONENT_LIB ${COMPONENT}_lib)
   # Enter into the component
